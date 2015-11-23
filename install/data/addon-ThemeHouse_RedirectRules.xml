@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_RedirectRules" title="[⌂] Redirect Rules" version_string="1.0.0a" version_id="1447261019" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="redirectRules" parent_navigation_id="options" display_order="105" link="redirect-rules" admin_permission_id="redirectRule" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions>
+    <admin_permission admin_permission_id="redirectRule" display_order="3000"/>
+  </admin_permissions>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="th_redirect_rule_delete_redirectrules"><![CDATA[<xen:title>{xen:phrase th_confirm_deletion_of_redirect_rule_redirectrules}: {$redirectRule.title}</xen:title>
+
+<xen:h1>{xen:phrase th_confirm_deletion_of_redirect_rule_redirectrules}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:adminlink 'redirect-rules/edit', $redirectRule}">{$redirectRule.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink 'redirect-rules/delete', $redirectRule}" class="deleteConfirmForm formOverlay">
+
+	<p>{xen:phrase th_please_confirm_want_to_delete_redirect_rule_redirectrules}:</p>
+	<strong><a href="{xen:adminlink 'redirect-rules/edit', $redirectRule}">{$redirectRule.title}</a></strong>
+
+	<xen:submitunit save="{xen:phrase th_delete_redirect_rule_redirectrules}" />
+
+	<input type="hidden" name="_xfConfirm" value="1" />
+</xen:form>]]></template>
+    <template title="th_redirect_rule_edit_redirectrules"><![CDATA[<xen:title>{xen:if '{$redirectRule.redirect_rule_id}', '{xen:phrase th_edit_redirect_rule_redirectrules}: {$redirectRule.title}', '{xen:phrase th_create_new_redirect_rule_redirectrules}'}</xen:title>
+
+<xen:h1>{xen:if '{$redirectRule.redirect_rule_id}', '{xen:phrase th_edit_redirect_rule_redirectrules}: <em>{$redirectRule.title}</em>', '{xen:phrase th_create_new_redirect_rule_redirectrules}'}</xen:h1>
+
+<xen:if is="{$redirectRule.redirect_rule_id}">
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink 'redirect-rules'}#{xen:helper listitemid, $redirectRule.redirect_rule_id}">{$redirectRule.title}</xen:breadcrumb>
+	</xen:navigation>
+</xen:if>
+
+<xen:form action="{xen:adminlink 'redirect-rules/save', $redirectRule}"
+	class="AutoValidator"
+	data-redirect="on">
+
+	<ul class="tabs Tabs" data-panes="#redirectRulePanes > li">
+		<li class="active"><a>{xen:phrase th_redirect_rule_options_redirectrules}</a></li>
+		<li><a title="{xen:phrase display_notice_if_user}" class="Tooltip">{xen:phrase user_criteria}</a></li>
+		<li><a title="{xen:phrase display_notice_if_date}" class="Tooltip">{xen:phrase date_criteria}</a></li>
+		<li><a title="{xen:phrase display_notice_if_page}" class="Tooltip">{xen:phrase page_criteria}</a></li>
+		<li><a title="{xen:phrase display_notice_if_user}" class="Tooltip">{xen:phrase custom_userfield_criteria}</a></li>
+	</ul>
+
+	<ul id="redirectRulePanes">
+		<li>
+			<fieldset>
+			<xen:textboxunit label="{xen:phrase title}:" name="title" value="{$redirectRule.title}" data-liveTitleTemplate="{xen:if {$redirectRule.redirect_rule_id},
+				'{xen:phrase th_edit_redirect_rule_redirectrules}: <em>%s</em>',
+				'{xen:phrase th_create_new_redirect_rule_redirectrules}: <em>%s</em>'}" />
+			<xen:textboxunit label="{xen:phrase th_reroute_domain_redirectrules}:" name="reroute_domain" value="{$redirectRule.reroute_domain}" />
+			</fieldset>
+			
+			<fieldset>				
+				<xen:checkboxunit label="{xen:phrase options}:">
+					<xen:option name="active" selected="{$redirectRule.active}" label="{xen:phrase th_redirect_rule_is_active_redirectrules}"
+						hint="{xen:phrase th_use_this_to_temporarily_disable_this_redirect_rule_redirectrules}" />
+				</xen:checkboxunit>
+				
+				<xen:spinboxunit label="{xen:phrase display_order}:" name="display_order" value="{$redirectRule.display_order}" min="0" step="10" />				
+			</fieldset>
+		</li>
+		<li><xen:include template="helper_criteria_user" /></li>
+		<li><xen:include template="helper_criteria_user_date" /></li>
+		<li><xen:include template="helper_criteria_page" /></li>
+		<li><xen:include template="helper_criteria_user_field" /></li>
+	</ul>
+
+	<xen:submitunit>
+		<input type="submit" name="saveexit" value="{xen:phrase save_and_exit}" accesskey="e" class="button primary" id="saveExitButton" />
+		<input type="submit" name="reload" value="{xen:phrase save_changes}" accesskey="s" class="button" id="saveReloadButton" data-ajaxvalue="{xen:phrase save_all_changes}" />
+		<xen:if is="{$redirectRule.redirect_rule_id}">
+			<input type="button" value="{xen:phrase th_delete_redirect_rule_redirectrules}..." accesskey="d" class="button OverlayTrigger"
+				data-href="{xen:adminlink redirect-rules/delete, $redirectRule}" />
+		</xen:if>
+	</xen:submitunit>
+</xen:form>]]></template>
+    <template title="th_redirect_rule_list_redirectrules"><![CDATA[<xen:title>{xen:phrase th_redirect_rules_redirectrules}</xen:title>
+
+<xen:h1>{xen:phrase th_redirect_rules_redirectrules}</xen:h1>
+
+<xen:topctrl>
+	<a href="{xen:adminlink 'redirect-rules/add'}" class="button">+ {xen:phrase th_create_new_redirect_rule_redirectrules}</a>
+</xen:topctrl>
+
+<xen:require css="filter_list.css" />
+<xen:require js="js/xenforo/filter_list.js" />
+
+<xen:form action="{xen:adminlink 'redirect-rules/toggle'}" class="section AutoValidator">
+
+	<xen:if is="{$redirectRules}">
+		<h2 class="subHeading">
+			<xen:include template="filter_list_controls" />
+			{xen:phrase th_redirect_rules_redirectrules}
+		</h2>
+
+		<ol class="FilterList">
+			<xen:foreach loop="$redirectRules" key="$redirectRuleId" value="$redirectRule">
+				<xen:listitem id="{$redirectRuleId}"
+					label="{xen:raw $redirectRule.title}"
+					snippet="{$redirectRule.reroute_domain}"
+					href="{xen:adminlink 'redirect-rules/edit', $redirectRule}"
+					delete="{xen:adminlink 'redirect-rules/delete', $redirectRule}"
+					deletehint="{xen:phrase delete}">
+				</xen:listitem>
+			</xen:foreach>
+		</ol>
+
+		<p class="sectionFooter">{xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:count $redirectRules}</span>', 'total={xen:count $redirectRules}'}</p>
+
+	<xen:else />
+		<div class="noResults">{xen:phrase th_there_are_no_redirect_rules_redirectrules}</div>
+	</xen:if>
+
+</xen:form>]]></template>
+  </admin_templates>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_RedirectRules_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="front_controller_pre_view" execute_order="10" callback_class="ThemeHouse_RedirectRules_Listener_FrontControllerPreView" callback_method="frontControllerPreView" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="ThemeHouse_RedirectRules_Listener_TemplatePostRender" callback_method="templatePostRender" active="1" hint="" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="th_redirectRules" display_order="2000" debug_only="0"/>
+    <option option_id="th_redirectRules_allowAdmin" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_redirectRules" display_order="1"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_redirectRules" version_id="1417700311" version_string="1.0.0"><![CDATA[Redirect Rules]]></phrase>
+    <phrase title="admin_permission_redirectRule" version_id="1417700311" version_string="1.0.0"><![CDATA[Manage redirect rules]]></phrase>
+    <phrase title="option_group_th_redirectRules" version_id="1417700311" version_string="1.0.0"><![CDATA[Redirect Rules by ThemeHouse]]></phrase>
+    <phrase title="option_group_th_redirectRules_description" version_id="1417700311" version_string="1.0.0"><![CDATA[Options for the Redirect Rules by ThemeHouse add-on.]]></phrase>
+    <phrase title="option_th_redirectRules_allowAdmin" version_id="1417700311" version_string="1.0.0"><![CDATA[Allow redirect of Admin Control Panel]]></phrase>
+    <phrase title="option_th_redirectRules_allowAdmin_explain" version_id="1417700311" version_string="1.0.0"><![CDATA[Enabling this option will allow rules to apply to pages in the Admin Control Panel. This option is disabled by default and should be enabled with caution as it can make your entire Admin Control Panel inaccessible.]]></phrase>
+    <phrase title="th_confirm_deletion_of_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Confirm Deletion of Redirect Rule]]></phrase>
+    <phrase title="th_create_new_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Create New Redirect Rule]]></phrase>
+    <phrase title="th_delete_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Delete Redirect Rule]]></phrase>
+    <phrase title="th_edit_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Edit Redirect Rule]]></phrase>
+    <phrase title="th_please_confirm_want_to_delete_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Please confirm that you want to delete the following redirect rule]]></phrase>
+    <phrase title="th_redirect_rules_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Redirect Rules]]></phrase>
+    <phrase title="th_redirect_rule_is_active_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Redirect rule is active]]></phrase>
+    <phrase title="th_redirect_rule_options_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Redirect Rule Options]]></phrase>
+    <phrase title="th_requested_redirect_rule_not_found_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[The requested redirect rule could not be found.]]></phrase>
+    <phrase title="th_reroute_domain_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Re-route Domain]]></phrase>
+    <phrase title="th_there_are_no_redirect_rules_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[There are no redirect rules.]]></phrase>
+    <phrase title="th_use_this_to_temporarily_disable_this_redirect_rule_redirectrules" version_id="1417700311" version_string="1.0.0"><![CDATA[Use this to temporarily disable this redirect rule.]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="redirect-rules" class="ThemeHouse_RedirectRules_Route_PrefixAdmin_RedirectRules" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_redirectRules" description="Copyright notice for [⌂] Redirect Rules" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
